@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Reservas</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        #modal-mensaje {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+        }
+
+        #modal-mensaje .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        #modal-mensaje .modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px 25px;
+            border-radius: 10px;
+            width: 300px;
+            height: 200px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            animation: aparecer 0.3s ease;
+        }
+
+        #modal-mensaje h2 {
+            margin-bottom: 10px;
+        }
+
+        #modal-mensaje h2.error {
+            color: #d32f2f;
+        }
+
+        #modal-mensaje h2.exito {
+            color: #2e7d32;
+        }
+
+        #modal-mensaje h2.info {
+            color: #1565c0;
+        }
+
+        #modal-mensaje p {
+            margin-bottom: 20px;
+        }
+
+        #modal-mensaje .btn {
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        #modal-mensaje .btn.error {
+            background: #d32f2f;
+        }
+
+        #modal-mensaje .btn.error:hover {
+            background: #b71c1c;
+        }
+
+        #modal-mensaje .btn.exito {
+            background: #2e7d32;
+        }
+
+        #modal-mensaje .btn.exito:hover {
+            background: #1b5e20;
+        }
+
+        #modal-mensaje .btn.info {
+            background: #1565c0;
+        }
+
+        #modal-mensaje .btn.info:hover {
+            background: #0d47a1;
+        }
+
+        #modal-mensaje .cerrar {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .dash-container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        .reserva-card {
+            display: flex;
+            align-items: stretch;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .reserva-card img {
+            width: 300px;
+            object-fit: cover;
+        }
+
+        .reserva-info {
+            padding: 25px;
+            flex: 1;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .reserva-info h3 {
+            margin-bottom: 12px;
+            font-size: 1.4rem;
+        }
+
+        .reserva-info p {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .actions button {
+            padding: 10px 20px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .btn-cancel {
+            background: #d32f2f;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cancel:hover {
+            background: #b71c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(211, 47, 47, 0.2);
+        }
+
+        .btn-edit {
+            background: #f39c12;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            width: 300px;
+            height: 100%;
+            overflow: hidden;
+        }
+        .carousel-inner {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+        }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            z-index: 10;
+        }
+        .carousel-control.prev { left: 5px; }
+        .carousel-control.next { right: 5px; }
+        .carousel-control:hover { background: rgba(0, 0, 0, 0.8); }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 5px;
+            z-index: 10;
+        }
+        .indicator {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+        .indicator.active { background: white; }
+    </style>
+</head>
+
+<body style="background-color: var(--bg-color);">
+    <nav class="navbar"
+        style="position: relative; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); justify-content: space-between; padding: 20px 50px;">
+        <div class="brand-logo"
+            style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">
+            <span class="brand-name">Pon tu marca aca</span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Inicio</a>
+            <span id="auth-info" style="font-weight: bold; margin-left: auto; color: var(--accent-color);"></span>
+        </div>
+    </nav>
+
+    <div class="dash-container">
+        <h2 style="font-family: var(--font-heading); margin-bottom: 30px; font-size: 2rem;">Tus Reservas Activas en
+            <span class="brand-name">Hotel</span>
+        </h2>
+        <div id="reservas-list">
+            Cargando reservas...
+        </div>
+    </div>
+
+    <div class="modal" id="edit-modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 20px; font-family: var(--font-heading); font-size:1.5rem;">Modificar Fechas de
+                Llegada</h3>
+            <div class="form-group">
+                <label>Nueva Fecha de Entrada</label>
+                <input type="datetime-local" id="edit-in"
+                    style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius:4px;">
+            </div>
+            <div class="form-group">
+                <label>Nueva Fecha de Salida</label>
+                <input type="datetime-local" id="edit-out"
+                    style="width: 100%; padding: 10px; margin-bottom: 25px; border: 1px solid #ccc; border-radius:4px;">
+            </div>
+            <button class="btn-dark" style="width: 100%; margin-bottom: 15px;" id="btn-save-edit">Guardar
+                Cambios</button>
+            <button class="btn-outline" style="width: 100%; color: #333; border-color: #333;"
+                onclick="closeModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <div class="modal" id="confirm-cancel-modal">
+        <div class="modal-content" style="text-align: center;">
+            <h3 style="margin-bottom: 15px; font-family: var(--font-heading); font-size:1.5rem; color: #d32f2f;">¿Cancelar Reserva?</h3>
+            <p style="margin-bottom: 25px;">¿Estás seguro que deseas cancelar esta reserva irrevocablemente?</p>
+            <button class="btn-cancel" style="width: 100%; margin-bottom: 10px;" onclick="confirmCancel()">Sí, Cancelar Irrevocablemente</button>
+            <button class="btn-outline" style="width: 100%; color: #333; border-color: #333;" onclick="document.getElementById('confirm-cancel-modal').style.display='none'">No, Mantener Reserva</button>
+        </div>
+    </div>
+
+    <script>
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!user) window.location.href = 'login.html';
+
+        document.getElementById('auth-info').innerText = "Dashboard de " + user.nombre;
+
+        let reservasActuales = [];
+        let currentEditingId = null;
+        let currentEditingHab = null;
+
+        async function loadReservas() {
+            const list = document.getElementById('reservas-list');
+            list.innerHTML = 'Cargando...';
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/reservas/usuario/` + user.id);
+                reservasActuales = await res.json();
+
+                if (reservasActuales.length === 0) {
+                    list.innerHTML = '<p style="font-size: 1.1rem; margin-bottom:20px;">No tienes reservas activas en este momento.</p><a href="index.html" class="btn-dark" style="text-decoration:none; padding: 10px 20px; display:inline-block;">Explorar Habitaciones</a>';
+                    return;
+                }
+
+                list.innerHTML = '';
+                reservasActuales.forEach(r => {
+                    const d1 = new Date(r.fecha_entrada);
+                    const d2 = new Date(r.fecha_salida);
+                    const horas = Math.ceil((d2 - d1) / (1000 * 60 * 60));
+                    const precioHora = Math.round(r.precio / 24);
+                    
+                    const extraImg1 = 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80';
+                    const extraImg2 = 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80';
+
+                    list.innerHTML += `
+                        <div class="reserva-card">
+                            <div class="carousel" id="carousel-${r.id}">
+                                <div class="carousel-inner" id="inner-${r.id}">
+                                    <div class="carousel-item"><img src="${r.img}" alt="${r.tipo}"></div>
+                                    <div class="carousel-item"><img src="${extraImg1}" alt="${r.tipo} - Vista 2"></div>
+                                    <div class="carousel-item"><img src="${extraImg2}" alt="${r.tipo} - Baño"></div>
+                                </div>
+                                <button class="carousel-control prev" onclick="moveDashboardCarousel(${r.id}, -1)">&#10094;</button>
+                                <button class="carousel-control next" onclick="moveDashboardCarousel(${r.id}, 1)">&#10095;</button>
+                                <div class="carousel-indicators">
+                                    <div class="indicator active" onclick="setDashboardCarousel(${r.id}, 0)"></div>
+                                    <div class="indicator" onclick="setDashboardCarousel(${r.id}, 1)"></div>
+                                    <div class="indicator" onclick="setDashboardCarousel(${r.id}, 2)"></div>
+                                </div>
+                            </div>
+                            <div class="reserva-info">
+                                <h3>${r.tipo}</h3>
+                                <p><strong>No. Confirmación:</strong> #${r.id}</p>
+                                <p><strong>Llegada:</strong> ${r.fecha_entrada}</p>
+                                <p><strong>Salida:</strong> ${r.fecha_salida} (${horas} horas)</p>
+                                <h4 style="margin-top:15px; color: var(--accent-color); font-size: 1.3rem;">Total Pagado: $${(horas * precioHora).toLocaleString()}</h4>
+                                
+                                <div class="actions">
+                                    <button class="btn-edit" onclick="openEdit(${r.id}, ${r.habitacion_id}, '${r.fecha_entrada}', '${r.fecha_salida}')">Cambiar Fechas</button>
+                                    <button class="btn-cancel" onclick="openCancelConfirm(${r.id})">Cancelar Reserva</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            } catch (e) {
+                list.innerHTML = '<p style="color:red">Error conectando con el servidor. ¿El backend está encendido?</p>';
+            }
+        }
+
+        // LÓGICA DEL CARRUSEL EN DASHBOARD
+        window.dashboardSlides = {};
+
+        window.moveDashboardCarousel = function(reservaId, step) {
+            if (window.dashboardSlides[reservaId] === undefined) window.dashboardSlides[reservaId] = 0;
+            setDashboardCarousel(reservaId, window.dashboardSlides[reservaId] + step);
+        };
+
+        window.setDashboardCarousel = function(reservaId, index) {
+            const inner = document.getElementById(`inner-${reservaId}`);
+            if (!inner) return;
+            const items = inner.querySelectorAll('.carousel-item');
+            const indicators = document.querySelector(`#carousel-${reservaId}`).querySelectorAll('.indicator');
+            
+            if (index >= items.length) window.dashboardSlides[reservaId] = 0;
+            else if (index < 0) window.dashboardSlides[reservaId] = items.length - 1;
+            else window.dashboardSlides[reservaId] = index;
+            
+            inner.style.transform = 'translateX(-' + (window.dashboardSlides[reservaId] * 100) + '%)';
+            
+            indicators.forEach((ind, i) => {
+                if (i === window.dashboardSlides[reservaId]) ind.classList.add('active');
+                else ind.classList.remove('active');
+            });
+        };
+
+        async function openCancelConfirm(id) {
+            // Store pending id for confirmation
+            window.pendingCancelId = id;
+            document.getElementById('confirm-cancel-modal').style.display = 'flex';
+        }
+
+        // Called when user confirms cancellation in modal
+        async function confirmCancel() {
+            const id = window.pendingCancelId;
+            if (!id) return;
+            document.getElementById('confirm-cancel-modal').style.display = 'none';
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/reservas/` + id, { method: 'DELETE' });
+                if (res.ok) {
+                    mostrarMensaje('Reserva cancelada con éxito (Reembolso en proceso automático).', 'exito');
+                    loadReservas();
+                } else throw new Error("Error borrando reserva");
+            } catch (e) {
+                mostrarMensaje(e.message, 'error');
+            }
+        }
+
+
+        window.openEdit = function (reservaId, habId, inDate, outDate) {
+            currentEditingId = reservaId;
+            currentEditingHab = habId;
+            document.getElementById('edit-in').value = inDate;
+            document.getElementById('edit-out').value = outDate;
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+
+        window.closeModal = function () {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        document.getElementById('btn-save-edit').addEventListener('click', async () => {
+            const checkIn = document.getElementById('edit-in').value;
+            const checkOut = document.getElementById('edit-out').value;
+
+            if (new Date(checkOut) <= new Date(checkIn)) {
+                mostrarMensaje('La salida debe ser después de la entrada.', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('btn-save-edit');
+            btn.innerText = 'Guardando...';
+
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/reservas/` + currentEditingId, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ checkIn, checkOut, habitacion_id: currentEditingHab })
+                });
+                const data = await res.json();
+
+                btn.innerText = 'Guardar Cambios';
+
+                if (!res.ok) throw new Error(data.error);
+
+                mostrarMensaje('¡Tus fechas de llegada han sido actualizadas!', 'exito');
+                closeModal();
+                loadReservas();
+            } catch (e) {
+                mostrarMensaje(e.message, 'error');
+                btn.innerText = 'Guardar Cambios';
+            }
+        });
+
+        loadReservas();
+    </script>
+</body>
+
+</html>

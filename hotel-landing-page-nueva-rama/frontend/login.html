@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Hotel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-color); }
+        .auth-card { background: var(--white); padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+        .auth-card h2 { text-align: center; margin-bottom: 20px; }
+        .switch-link { text-align: center; margin-top: 25px; font-size: 0.9rem; }
+        .switch-link a { color: var(--accent-color); font-weight: 600; margin-top: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="log-email" required placeholder="tu@correo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="log-password" required placeholder="******">
+                </div>
+                <button type="submit" class="btn-dark" style="width: 100%; margin-top: 10px;">Entrar</button>
+            </form>
+            <div class="switch-link">
+                ¿No tienes cuenta? <a href="register.html">Regístrate aquí</a>.<br><br>
+                <a href="index.html" style="color: var(--text-secondary); text-decoration: underline;">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('log-email').value;
+            const password = document.getElementById('log-password').value;
+            
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.error || 'Credenciales inválidas');
+                
+                // Guardar como logueado
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirigir si quería reservar
+                const pendingBooking = localStorage.getItem('pendingBooking');
+                if (pendingBooking) {
+                    window.location.href = 'checkout.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                mostrarMensaje(error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>

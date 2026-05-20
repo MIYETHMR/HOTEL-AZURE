@@ -1,0 +1,77 @@
+=============================================
+ ESPECIFICACIONES TÉCNICAS - ORGANIZAPP HOTEL
+=============================================
+
+1. ARQUITECTURA GENERAL
+---------------------------------------------
+- Modelo: Cliente-Servidor (Client-Server).
+- Frontend: Single Page Application / Multipage (Vanilla JS, HTML5, CSS3).
+- Backend: API RESTful en Node.js.
+- Base de Datos: Relacional embebida (SQLite3).
+
+
+2. STACK TECNOLÓGICO Y DEPENDENCIAS
+---------------------------------------------
+[Frontend]
+- Lenguajes: HTML5, CSS3 Variables, JavaScript (ES6+).
+- Manejo de estado/Sesión: LocalStorage (Autenticación y transacciones pendientes).
+- Peticiones HTTP: Fetch API (Asíncrono con async/await).
+- Servidor recomendado de desarrollo: "npx serve" o "VS Code Live Server".
+
+[Backend]
+- Entorno de Ejecución: Node.js
+- Framework: Express.js (^4.18.2) para enrutamiento y manejo de controladores HTTP.
+- Middlewares: 
+   * CORS (^2.8.5) - Para permitir peticiones cruzadas desde el frontend.
+   * Express.JSON - Parseo nativo de cuerpo de requests (application/json).
+- Base de datos motor: sqlite3 (^5.1.6).
+
+
+3. ESQUEMA DE BASE DE DATOS (hotel.db)
+---------------------------------------------
+El modelo cuenta con 3 tablas principales, respetando integridad referencial:
+
+- Tabla 'usuarios'
+  * id: INTEGER PRIMARY KEY AUTOINCREMENT
+  * nombre: TEXT NOT NULL
+  * email: TEXT UNIQUE NOT NULL
+  * password: TEXT NOT NULL
+
+- Tabla 'habitaciones'
+  * id: INTEGER PRIMARY KEY
+  * tipo: TEXT
+  * desc: TEXT
+  * precio: INTEGER
+  * img: TEXT
+
+- Tabla 'reservas'
+  * id: INTEGER PRIMARY KEY AUTOINCREMENT
+  * usuario_id: INTEGER (Foreign Key -> usuarios.id)
+  * habitacion_id: INTEGER (Foreign Key -> habitaciones.id)
+  * fecha_entrada: TEXT
+  * fecha_salida: TEXT
+
+
+4. INTERFAZ DE PROGRAMACIÓN (API ENDPOINTS)
+---------------------------------------------
+Puerto por defecto: 3001 (http://localhost:3001)
+
+[Autenticación]
+- POST /api/register -> Registra un nuevo usuario previniendo emails duplicados.
+- POST /api/login -> Loguea un usuario. Devuelve información básica si las credenciales son válidas.
+
+[Habitaciones]
+- GET /api/habitaciones-disponibles -> Recupera inventario. Filtra internamente cruces de fechas si se envían los parámetros checkIn y checkOut.
+- GET /api/habitaciones/:id -> Recupera información de una habitación individual.
+
+[Reservas]
+- POST /api/reservas -> Valida disponibilidad y crea la reserva en base de datos.
+- GET /api/reservas/usuario/:id -> Lista todas las reservas (con JOIN de habitaciones) para un usuario. Ordenado por fecha.
+- PUT /api/reservas/:id -> Modifica una reserva (fechas) revisando que no ocurra solapamiento (overlapping) con reservas existentes.
+- DELETE /api/reservas/:id -> Elimina de la base de datos la reserva correspondiente.
+
+
+5. FUNCIONAMIENTO DE RED MULTIDISPOSITIVO (LAN)
+---------------------------------------------
+- El frontend está programado para resolver dinámicamente la IP del servidor mediante `window.location.hostname`. 
+- Si el frontend está alojado en `http://10.17.6.194:5500`, el frontend automáticamente enviará sus peticiones a `http://10.17.6.194:3001/api/...`. No requiere manipulación estática del código base para migrar entre servidores en red local.

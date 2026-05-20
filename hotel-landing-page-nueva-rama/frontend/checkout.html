@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout de Reserva - Detalles</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            padding: 40px 20px;
+        }
+
+        .checkout-grid {
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            overflow: hidden;
+        }
+
+        .checkout-summary {
+            background: #faf8f5;
+            padding: 40px;
+            border-right: 1px solid #eee;
+        }
+
+        .checkout-summary img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .checkout-summary h2 {
+            margin-bottom: 15px;
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: #111;
+        }
+
+        .checkout-summary>p {
+            margin-bottom: 25px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 1.05rem;
+        }
+
+        .checkout-details-box {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid #eaeaea;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Carousel Styles */
+        .carousel {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        .carousel-inner {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.4s ease-in-out;
+        }
+        .carousel-item {
+            min-width: 100%;
+            height: 100%;
+        }
+        .checkout-summary .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 0;
+            margin-bottom: 0;
+            box-shadow: none;
+        }
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            z-index: 10;
+        }
+        .carousel-control.prev { left: 10px; }
+        .carousel-control.next { right: 10px; }
+        .carousel-control:hover { background: rgba(0, 0, 0, 0.8); }
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 6px;
+            z-index: 10;
+        }
+        .indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+        }
+        .indicator.active { background: white; }
+
+        .checkout-payment {
+            padding: 40px;
+        }
+
+        .checkout-payment h3 {
+            margin-bottom: 25px;
+            font-size: 1.5rem;
+            font-family: var(--font-heading);
+        }
+
+        .switch-link {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+        }
+
+        .switch-link a {
+            color: var(--accent-color);
+            font-weight: 600;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .checkout-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .checkout-summary {
+                border-right: none;
+                border-bottom: 1px solid #eee;
+                padding: 30px 20px;
+            }
+
+            .checkout-payment {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <div class="checkout-grid">
+
+            <!-- SECCIÓN IZQUIERDA: Detalles de la Habitación -->
+            <div class="checkout-summary" id="room-summary-content">
+                <p style="text-align:center; padding: 50px;">Cargando fotografías y detalles de la habitación...</p>
+            </div>
+
+            <!-- SECCIÓN DERECHA: Pasarela de Pagos -->
+            <div class="checkout-payment">
+                <h3>Método de Pago Preferido</h3>
+                <p style="margin-bottom: 20px; color: #666; font-size: 0.95rem;">Selecciona cómo deseas abonar tu
+                    estancia. Tu reserva se confirmará inmediatamente.</p>
+
+                <div class="form-group">
+                    <select id="pay-method"
+                        style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1.05rem; margin-bottom: 25px; cursor: pointer; font-family: var(--font-body); background-color: #fcfcfc;">
+                        <option value="card" selected>💳 Tarjeta de Crédito / Débito</option>
+                        <option value="cash">💵 Pago en Efectivo (En Recepción)</option>
+                        <option value="transfer">🏦 Transferencia / Banca en Línea</option>
+                    </select>
+                </div>
+
+                <form id="checkout-form">
+
+                    <!-- 1. Tarjeta -->
+                    <div id="method-card">
+                        <div class="form-group">
+                            <label>Titular de la tarjeta</label>
+                            <input type="text" id="card-name" required placeholder="Nombre como aparece en la tarjeta">
+                        </div>
+                        <div class="form-group">
+                            <label>Número de la Tarjeta</label>
+                            <input type="text" id="card-num" required placeholder="0000 0000 0000 0000" maxlength="16">
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex:1;">
+                                <label>Vencimiento</label>
+                                <input type="text" id="card-exp" required placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group" style="flex:1;">
+                                <label>CVV / CVC</label>
+                                <input type="text" id="card-cvv" required placeholder="123" maxlength="4">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Efectivo -->
+                    <div id="method-cash"
+                        style="display: none; text-align: center; padding: 25px; background: #f4faeb; border-radius: 8px; margin-bottom: 20px; border: 1px solid #d5e8c1;">
+                        <h4 style="margin-bottom: 12px; color: #3b5a1b; font-size: 1.2rem;">Pago en Recepción</h4>
+                        <p style="font-size: 1rem; color: #4b6a2b; font-weight: 500; line-height: 1.5;">Aseguraremos tu
+                            habitación desde hoy. Deberás cancelar el monto total en efectivo directamente en la
+                            recepción del hotel al momento de tu llegada (Check-In).</p>
+                    </div>
+
+                    <!-- 3. Transferencia (Bancos Regionales) -->
+                    <div id="method-transfer"
+                        style="display: none; padding: 25px; background: #fdfbf7; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e1d3bc;">
+                        <h4 style="margin-bottom: 12px; color: #8a6a3b; font-size: 1.2rem;">Banca en Línea (PSE / SPEI)
+                        </h4>
+                        <p style="font-size: 0.95rem; color: #555; margin-bottom: 20px;">Transfiere directamente
+                            ingresando a la pasarela virtual de tu banco.</p>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label>Selecciona tu entidad financiera:</label>
+                            <select
+                                style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; margin-top: 8px; font-size: 1rem;">
+                                <option>Bancolombia</option>
+                                <option>Banco de Bogotá</option>
+                                <option>Nequi / DaviPlata</option>
+                                <option>Davivienda</option>
+                                <option>BBVA</option>
+                                <option>Scotiabank Colpatria</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-dark"
+                        style="width: 100%; margin-top: 20px; font-size: 1.1rem; padding: 15px;" id="btn-pay">Completar
+                        Pago Seguro ($0)</button>
+                </form>
+
+                <div class="switch-link">
+                    <a href="index.html">Cancelar proceso y volver al inicio</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const pendingBooking = JSON.parse(localStorage.getItem('pendingBooking'));
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (!pendingBooking || !user) {
+            window.location.href = 'index.html';
+        }
+
+        let roomData = {};
+
+        async function loadRoomDetails() {
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/habitaciones/` + pendingBooking.habitacion_id);
+                roomData = await res.json();
+
+                const d1 = new Date(pendingBooking.checkIn);
+                const d2 = new Date(pendingBooking.checkOut);
+                const hours = Math.ceil((d2 - d1) / (1000 * 60 * 60));
+                const precioHora = Math.round(roomData.precio / 24);
+                const total = hours * precioHora;
+
+                // Actualizar botón de pago
+                document.getElementById('btn-pay').innerText = `Completar Pago Seguro ($${total.toLocaleString()})`;
+
+                // Renderizar Tarjeta de Detalles Izquierda
+                const extraImg1 = 'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80';
+                const extraImg2 = 'https://images.unsplash.com/photo-1584132967334-10e028bd69f7?auto=format&fit=crop&w=800&q=80';
+                
+                document.getElementById('room-summary-content').innerHTML = `
+                    <div class="carousel">
+                        <span style="position: absolute; top: 15px; right: 15px; background: var(--accent-color); color: white; padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.2); z-index: 20;">Mejor Opción</span>
+                        <div class="carousel-inner" id="room-carousel-inner">
+                            <div class="carousel-item"><img src="${roomData.img}" alt="${roomData.tipo}"></div>
+                            <div class="carousel-item"><img src="${extraImg1}" alt="${roomData.tipo} - Vista 2"></div>
+                            <div class="carousel-item"><img src="${extraImg2}" alt="${roomData.tipo} - Baño"></div>
+                        </div>
+                        <button class="carousel-control prev" onclick="moveCarousel(-1)">&#10094;</button>
+                        <button class="carousel-control next" onclick="moveCarousel(1)">&#10095;</button>
+                        <div class="carousel-indicators">
+                            <div class="indicator active" onclick="setCarousel(0)"></div>
+                            <div class="indicator" onclick="setCarousel(1)"></div>
+                            <div class="indicator" onclick="setCarousel(2)"></div>
+                        </div>
+                    </div>
+                    <h2>${roomData.tipo}</h2>
+                    <p>${roomData.desc}</p>
+                    
+                    <h4 style="margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color:#111; font-family: var(--font-heading);">Beneficios Incluidos</h4>
+                    <ul style="list-style: none; margin-bottom: 30px; color: #555; display:grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size:0.95rem;">
+                        <li>📶 Wi-Fi 5G Ilimitado</li>
+                        <li>🏊‍♂️ Acceso a Piscina</li>
+                        <li>🍳 Desayuno Buffet</li>
+                        <li>🚗 Parqueadero Gratis</li>
+                    </ul>
+
+                    <div class="checkout-details-box">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                            <span style="color:#666;">Huésped Titular:</span>
+                            <strong style="color: #111;">${user.nombre}</strong>
+                        </div>
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                            <div>
+                                <span style="color:#666; font-size:0.85rem; display:block; margin-bottom: 5px;">📅 Fecha Llegada</span>
+                                <strong style="color: #111;">${pendingBooking.checkIn}</strong>
+                            </div>
+                            <div>
+                                <span style="color:#666; font-size:0.85rem; display:block; margin-bottom: 5px;">📅 Fecha Salida</span>
+                                <strong style="color: #111;">${pendingBooking.checkOut}</strong>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 15px; border-top: 2px dashed #ccc; padding-top: 20px;">
+                            <span style="font-size: 1.1rem; color:#333; font-family:var(--font-heading); font-style:italic;">Estancia de ${hours} horas</span>
+                            <strong style="font-size: 1.8rem; color: var(--accent-color);">$${total.toLocaleString()}</strong>
+                        </div>
+                    </div>
+                `;
+            } catch (e) {
+                document.getElementById('room-summary-content').innerHTML = '<p style="color:red;">Error cargando detalles fotográficos.</p>';
+            }
+        }
+
+        loadRoomDetails();
+
+        // LÓGICA DEL CARRUSEL
+        window.currentSlide = 0;
+        window.moveCarousel = function(step) {
+            setCarousel(window.currentSlide + step);
+        };
+        window.setCarousel = function(index) {
+            const inner = document.getElementById('room-carousel-inner');
+            if (!inner) return;
+            const items = inner.querySelectorAll('.carousel-item');
+            const indicators = document.querySelectorAll('.indicator');
+            if (index >= items.length) window.currentSlide = 0;
+            else if (index < 0) window.currentSlide = items.length - 1;
+            else window.currentSlide = index;
+            
+            inner.style.transform = 'translateX(-' + (window.currentSlide * 100) + '%)';
+            
+            indicators.forEach((ind, i) => {
+                if (i === window.currentSlide) ind.classList.add('active');
+                else ind.classList.remove('active');
+            });
+        };
+
+        // LÓGICA DE METODOS DE PAGO
+        const payMethod = document.getElementById('pay-method');
+        const mCard = document.getElementById('method-card');
+        const mCash = document.getElementById('method-cash');
+        const mTransfer = document.getElementById('method-transfer');
+        const btnPay = document.getElementById('btn-pay');
+
+        payMethod.addEventListener('change', (e) => {
+            const val = e.target.value;
+            mCard.style.display = 'none';
+            mCash.style.display = 'none';
+            mTransfer.style.display = 'none';
+
+            // Requerir tarjeta condicionalmente
+            const isCard = (val === 'card');
+            document.getElementById('card-name').required = isCard;
+            document.getElementById('card-num').required = isCard;
+            document.getElementById('card-exp').required = isCard;
+            document.getElementById('card-cvv').required = isCard;
+
+            if (val === 'card') {
+                mCard.style.display = 'block';
+                btnPay.innerText = 'Completar Pago Seguro';
+            } else if (val === 'cash') {
+                mCash.style.display = 'block';
+                btnPay.innerText = 'Confirmar Reserva en Destino';
+            } else if (val === 'transfer') {
+                mTransfer.style.display = 'block';
+                btnPay.innerText = 'Ir al Portal Bancario Externo';
+            }
+        });
+
+        // PROCESAMIENTO
+        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const originalText = btnPay.innerText;
+            btnPay.innerText = 'Autorizando Transacción segura...';
+            btnPay.disabled = true;
+
+            setTimeout(async () => {
+                try {
+                    const res = await fetch(`http://${window.location.hostname}:3001/api/reservas`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            usuario_id: user.id,
+                            habitacion_id: pendingBooking.habitacion_id,
+                            checkIn: pendingBooking.checkIn,
+                            checkOut: pendingBooking.checkOut
+                        })
+                    });
+                    const data = await res.json();
+                    if (!res.ok) throw new Error(data.error);
+
+                    localStorage.removeItem('pendingBooking');
+                    mostrarMensaje('¡Reserva Asegurada! La transacción se ha confirmado con éxito. Prepárate para empacar tus maletas.', 'exito');
+                    window.location.href = 'dashboard.html';
+                } catch (err) {
+                    mostrarMensaje(err.message, 'error');
+                    btnPay.innerText = 'Volver a intentar';
+                    btnPay.disabled = false;
+                }
+            }, 2500); // 2.5 seg de simulación
+        });
+    </script>
+</body>
+
+</html>

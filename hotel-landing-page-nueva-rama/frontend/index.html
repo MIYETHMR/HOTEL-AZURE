@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tu Mejor Experiencia - Hotel</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="config.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" style="justify-content: space-between; padding: 20px 50px;">
+        <div class="brand-logo" style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: bold; color: var(--accent-color);">
+            <span class="brand-name">Pon tu marca aca</span>
+        </div>
+        <div class="nav-links">
+            <a href="#">Inicio</a>
+            <a href="#habitaciones">Habitaciones</a>
+            <a href="#amenidades">Amenidades</a>
+            <a href="#contacto">Contacto</a>
+            <span id="auth-links"></span>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <img id="img-hero" src="./imgs/hero_bg_1774106437102.png" alt="Hotel Hero" class="hero-bg">
+        <div class="hero-content">
+            <h1 id="hero-title">Tu Mejor Experiencia</h1>
+            <p id="hero-subtitle">Confort, estilo y tranquilidad en un solo lugar</p>
+            <div class="hero-buttons">
+
+                <a href="#habitaciones"><button class="btn-outline">Ver Habitaciones</button></a>
+                <a href="#habitaciones"><button class="btn-dark">Reservar Ahora</button></a>
+            </div>
+        </div>
+
+        <!-- Booking Bar -->
+        <div class="booking-bar">
+            <div class="booking-item">
+                <label>Check In</label>
+                <div class="input-wrapper">
+                    <i class="far fa-calendar-alt"></i>
+                    <input type="datetime-local" value="" id="check-in">
+                </div>
+            </div>
+            <div class="booking-item">
+                <label>Check Out</label>
+                <div class="input-wrapper">
+                    <i class="far fa-calendar-alt"></i>
+                    <input type="datetime-local" value="" id="check-out">
+                </div>
+            </div>
+            <div class="booking-item">
+                <label>Adultos</label>
+                <input type="number" value="1" min="1" class="number-input">
+            </div>
+            <button class="btn-primary" style="align-self: flex-end;" id="btn-search">Buscar</button>
+        </div>
+    </header>
+
+    <!-- Nuestras Habitaciones -->
+    <section id="habitaciones" class="section">
+        <div class="section-header">
+            <h2>Nuestras Habitaciones</h2>
+            <p>Confort, estilo y tranquilidad en cada habitación.</p>
+        </div>
+
+        <div class="rooms-grid" id="rooms-container">
+            <!-- El contenido de las habitaciones se inyecta por script.js -->
+        </div>
+    </section>
+
+    <!-- Amenidades -->
+    <section id="amenidades" class="section bg-light">
+        <div class="section-header">
+            <h2>Amenidades</h2>
+            <p>Todo lo que necesitas para una experiencia inolvidable.</p>
+        </div>
+
+        <div class="amenities-grid">
+            <div class="amenity-item">
+                <i class="fas fa-wifi"></i>
+                <span>Wifi gratuito</span>
+                <p>Conexión a internet de alta velocidad</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-utensils"></i>
+                <span>Restaurante</span>
+                <p>Gastronomía local e internacional</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-hot-tub"></i>
+                <span>Sauna / Spa</span>
+                <p>Relajantes masajes y zonas húmedas</p>
+            </div>
+            <div class="amenity-item">
+                <i class="fas fa-dumbbell"></i>
+                <span>Gimnasio</span>
+                <p>Equipamiento moderno y versátil</p>
+            </div>
+        </div>
+
+        <div class="amenities-images">
+            <div class="amenity-img-box">
+                <img id="img-amenity1" src="./imgs/amenity_sauna_1774106749782.png" alt="Sauna">
+            </div>
+            <div class="amenity-img-box">
+                <img id="img-amenity2" src="./imgs/amenity_gimnasio.png" alt="Gimnasio">
+            </div>
+        </div>
+    </section>
+
+    <!-- Contáctanos -->
+    <section id="contacto" class="section">
+        <div class="section-header">
+            <h2>Contáctanos</h2>
+            <p>Contáctanos y planifica tu visita.</p>
+        </div>
+
+        <div class="contact-container">
+            <div class="contact-form">
+                <h3>Envíanos un mensaje</h3>
+                <form>
+                    <div class="form-group">
+                        <label>Nombre Completo</label>
+                        <input type="text" placeholder="Escribe tu nombre completo">
+                    </div>
+                    <div class="form-group">
+                        <label>Correo electrónico</label>
+                        <input type="email" placeholder="Escribe tu correo">
+                    </div>
+                    <div class="form-group">
+                        <label>Teléfono</label>
+                        <input type="tel" placeholder="Escribe tu número">
+                    </div>
+                    <div class="form-group">
+                        <label>Mensaje</label>
+                        <textarea rows="4" placeholder="Escribe lo que necesitas..."></textarea>
+                    </div>
+                    <button type="button" class="btn-dark" onclick="mostrarMensaje('Mensaje enviado. Nos pondremos en contacto pronto.', 'exito')">Enviar Mensaje</button>
+                </form>
+            </div>
+
+            <div class="contact-info">
+                <div class="info-card">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <strong>Dirección <span class="brand-name">Hotel</span>:</strong>
+                        <p class="brand-address">Calle 123, Ciudad, País</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-phone-alt"></i>
+                    <div>
+                        <strong>Teléfono Fijo / Móvil:</strong>
+                        <p class="brand-phone">+123 456 7890 / +098 765 4321</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <strong>Correo Electrónico:</strong>
+                        <p class="brand-email">contacto@hotel.com</p>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>Horario Atención:</strong>
+                        <p>Lunes a Viernes<br>8 AM - 6 PM</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-col brand-col">
+                <h3 class="brand-name">Nuestro Hotel</h3>
+                <p><span id="hero-title-footer">Tu mejor experiencia</span>. Disfruta de la máxima calidad de confort y lujo que solo <span class="brand-name">nuestro hotel</span> te puede
+                    brindar.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces</h4>
+                <ul>
+                    <li><a href="#">Inicio</a></li>
+                    <li><a href="#habitaciones">Habitaciones</a></li>
+                    <li><a href="#amenidades">Amenidades</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Políticas</h4>
+                <ul>
+                    <li><a href="#">Política de cancelación</a></li>
+                    <li><a href="#">Términos y Condiciones</a></li>
+                    <li><a href="#">Privacidad</a></li>
+                    <li><a href="#">PQRS</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Síguenos</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2023 <span class="brand-name">Nuestro Hotel</span>. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+    <script src="script.js"></script>
+</body>
+
+</html>

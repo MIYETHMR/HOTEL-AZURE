@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Hotel</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="config.js"></script>
+    <style>
+        .auth-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; background-color: var(--bg-color); }
+        .auth-card { background: var(--white); padding: 40px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); width: 100%; max-width: 400px; }
+        .auth-card h2 { text-align: center; margin-bottom: 20px; }
+        .switch-link { text-align: center; margin-top: 25px; font-size: 0.9rem; }
+        .switch-link a { color: var(--accent-color); font-weight: 600; margin-top: 10px; display: inline-block; }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h2>Crear Cuenta</h2>
+            <form id="register-form">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="reg-name" required placeholder="Tu nombre">
+                </div>
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <input type="email" id="reg-email" required placeholder="tu@correo.com">
+                </div>
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" id="reg-password" required placeholder="******">
+                </div>
+                <button type="submit" class="btn-dark" style="width: 100%; margin-top: 10px;">Registrarse</button>
+            </form>
+            <div class="switch-link">
+                ¿Ya tienes una cuenta? <a href="login.html">Inicia sesión aquí</a>.<br><br>
+                <a href="index.html" style="color: var(--text-secondary); text-decoration: underline;">Volver al inicio</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nombre = document.getElementById('reg-name').value;
+            const email = document.getElementById('reg-email').value;
+            const password = document.getElementById('reg-password').value;
+            
+            try {
+                const res = await fetch(`http://${window.location.hostname}:3001/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre, email, password })
+                });
+                const data = await res.json();
+                
+                if (!res.ok) throw new Error(data.error || 'Error en el registro');
+                
+                // Guardar como logueado
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                // Redirigir si quería reservar, si no a index
+                const pendingBooking = localStorage.getItem('pendingBooking');
+                if (pendingBooking) {
+                    window.location.href = 'checkout.html';
+                } else {
+                    window.location.href = 'index.html';
+                }
+            } catch (error) {
+                mostrarMensaje(error.message, 'error');
+            }
+        });
+    </script>
+</body>
+</html>
