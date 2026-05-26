@@ -24,7 +24,7 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
-        working-directory: ./hotel-landing-page-nueva-rama/backend
+        working-directory: ./hotel-landing-page-nueva-rama/hotel-landing-page-nueva-rama/backend
         run: |
           npm install
           npm run build --if-present
@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'Hotel-SBYMR'
           slot-name: 'Production'
-          package: ./hotel-landing-page-nueva-rama/backend
+          package: ./hotel-landing-page-nueva-rama/hotel-landing-page-nueva-rama/backend
           
