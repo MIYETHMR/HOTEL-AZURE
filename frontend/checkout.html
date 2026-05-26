@@ -274,7 +274,7 @@
 
         async function loadRoomDetails() {
             try {
-                const res = await fetch(`http://${window.location.hostname}:3001/api/habitaciones/` + pendingBooking.habitacion_id);
+                const res = await fetch(`http://${window.location.hostname}:3000/api/habitaciones/` + pendingBooking.habitacion_id);
                 roomData = await res.json();
 
                 const d1 = new Date(pendingBooking.checkIn);
@@ -408,7 +408,7 @@
 
             setTimeout(async () => {
                 try {
-                    const res = await fetch(`http://${window.location.hostname}:3001/api/reservas`, {
+                    const res = await fetch(`http://${window.location.hostname}:3000/api/reservas`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -422,8 +422,11 @@
                     if (!res.ok) throw new Error(data.error);
 
                     localStorage.removeItem('pendingBooking');
-                    mostrarMensaje('¡Reserva Asegurada! La transacción se ha confirmado con éxito. Prepárate para empacar tus maletas.', 'exito');
-                    window.location.href = 'dashboard.html';
+                    mostrarMensaje( '¡Reserva Asegurada! La transacción se ha confirmado con éxito.',
+                     'exito');
+                    setTimeout(() => { 
+                        window.location.href = 'dashboard.html';}, 2000);
+                    
                 } catch (err) {
                     mostrarMensaje(err.message, 'error');
                     btnPay.innerText = 'Volver a intentar';

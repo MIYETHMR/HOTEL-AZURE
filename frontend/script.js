@@ -35,7 +35,7 @@ async function loadRooms(checkIn = '', checkOut = '') {
     container.innerHTML = '<p style="text-align:center; width:100%; grid-column: 1 / -1;">Cargando habitaciones...</p>';
 
     try {
-        let url = `http://${window.location.hostname}:3001/api/habitaciones-disponibles`;
+        let url = `http://${window.location.hostname}:3000/api/habitaciones-disponibles`;
         if (checkIn && checkOut) {
             url += `?checkIn=${checkIn}&checkOut=${checkOut}`;
         }
