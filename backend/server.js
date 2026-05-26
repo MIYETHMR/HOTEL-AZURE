@@ -40,6 +40,9 @@ const poolPromise = sql.connect(config)
 app.get('/', (req, res) => {
     res.send('Servidor Azure funcionando 🚀');
 });
+app.get('/test', (req, res) => {
+    res.send('Ruta test funcionando');
+});
 
 app.get('/api/habitaciones', async (req, res) => {
 
