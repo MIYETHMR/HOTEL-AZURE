@@ -37,6 +37,9 @@ const poolPromise = sql.connect(config)
         throw err;
 
     });
+app.get('/', (req, res) => {
+    res.send('Servidor Azure funcionando 🚀');
+});
 
 app.get('/habitaciones', async (req, res) => {
 
