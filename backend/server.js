@@ -44,27 +44,32 @@ app.get('/test', (req, res) => {
     res.send('Ruta test funcionando');
 });
 
+//app.get('/api/habitaciones', async (req, res) => {
+
+   // try {
+
+     //   const pool = await poolPromise;
+
+       // const result = await pool.request()
+         //   .query(`
+           //     SELECT * FROM habitaciones);
+
+    //} catch(error) {
+
+//        res.status(500).json({
+  //          error: error.message
+    //    });
+
+    //}
+
+//});
 app.get('/api/habitaciones', async (req, res) => {
 
-    try {
-
-        const pool = await poolPromise;
-
-        const result = await pool.request()
-            .query(`
-                SELECT * FROM habitaciones
-            `);
-
-    } catch(error) {
-
-        res.status(500).json({
-            error: error.message
-        });
-
-    }
+    res.json({
+        mensaje: 'Ruta habitaciones funcionando'
+    });
 
 });
-
 
 // --- AUTENTICACIÓN ---
 app.post('/api/register', async (req, res) => {
