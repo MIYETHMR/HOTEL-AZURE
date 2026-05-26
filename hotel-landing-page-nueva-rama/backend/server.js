@@ -1,4 +1,3 @@
-require('dns').setDefaultResultOrder('ipv4first');
 require('dotenv').config();
 
 const express = require('express');
@@ -106,8 +105,6 @@ app.post('/api/login', async (req, res) => {
 
     const { email, password } = req.body;
 
-    console.log("EMAIL RECIBIDO:", email);
-    console.log("PASSWORD RECIBIDO:", password);
 
     try {
 
@@ -120,7 +117,6 @@ app.post('/api/login', async (req, res) => {
                 FROM usuarios
                 WHERE email = @email
             `);
-        console.log("USUARIO ENCONTRADO:", result.recordset);
 
         const user = result.recordset[0];
 
@@ -131,7 +127,6 @@ app.post('/api/login', async (req, res) => {
         }
 
         // 🔐 comparar contraseña
-        console.log("PASSWORD BD:", user.password);
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
