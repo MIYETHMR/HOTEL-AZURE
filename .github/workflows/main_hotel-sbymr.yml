@@ -24,7 +24,7 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
-        working-directory: ./página-de-inicio-del-hotel-nueva-rama/backend
+        working-directory: ./hotel-landing-page-nueva-rama/backend
         run: |
           npm install
           npm run build --if-present
