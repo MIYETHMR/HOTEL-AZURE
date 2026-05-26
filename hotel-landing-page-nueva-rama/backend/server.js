@@ -500,11 +500,13 @@ app.delete('/api/reservas/:id', async (req, res) => {
 
 
 // Iniciar servidor
+const PORT = process.env.PORT || 3000;
+
 poolPromise.then(() => {
 
-    app.listen(3000, () => {
+    app.listen(PORT, () => {
 
-        console.log("Servidor ejecutándose en puerto 3000");
+        console.log(`Servidor ejecutándose en puerto ${PORT}`);
 
     });
 
