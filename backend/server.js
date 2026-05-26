@@ -37,37 +37,28 @@ const poolPromise = sql.connect(config)
         throw err;
 
     });
-app.get('/', (req, res) => {
-    res.send('Servidor Azure funcionando 🚀');
-});
-app.get('/test', (req, res) => {
-    res.send('Ruta test funcionando');
-});
 
-//app.get('/api/habitaciones', async (req, res) => {
 
-   // try {
-
-     //   const pool = await poolPromise;
-
-       // const result = await pool.request()
-         //   .query(`
-           //     SELECT * FROM habitaciones);
-
-    //} catch(error) {
-
-//        res.status(500).json({
-  //          error: error.message
-    //    });
-
-    //}
-
-//});
 app.get('/api/habitaciones', async (req, res) => {
 
-    res.json({
-        mensaje: 'Ruta habitaciones funcionando'
-    });
+    try {
+
+        const pool = await poolPromise;
+
+        const result = await pool.request()
+            .query(`
+                SELECT * FROM habitaciones
+            `);
+
+        res.json(result.recordset);
+
+    } catch(error) {
+
+        res.status(500).json({
+            error: error.message
+        });
+
+    }
 
 });
 
@@ -119,7 +110,7 @@ app.post('/api/login', async (req, res) => {
 
     try {
 
-        const pool = await sql.connect(config);
+        const pool = await poolPromise;
 
         const result = await pool.request()
             .input('email', sql.VarChar, email)
