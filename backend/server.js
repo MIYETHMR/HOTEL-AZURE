@@ -41,7 +41,7 @@ app.get('/', (req, res) => {
     res.send('Servidor Azure funcionando 🚀');
 });
 
-app.get('/habitaciones', async (req, res) => {
+app.get('/api/habitaciones', async (req, res) => {
 
     try {
 
