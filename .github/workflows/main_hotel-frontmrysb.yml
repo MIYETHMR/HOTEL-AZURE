@@ -13,7 +13,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy frontend to Azure Web App
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7D70C56F54E6425D995F332B4EDF34F2 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_377BC5B99A064193A6FDB0456D5497CB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C9E7BAD3C67B41A0A3CA9C9ADBF179AB }}
+
+      - name: Deploy frontend only
         uses: azure/webapps-deploy@v3
         with:
           app-name: Hotel-frontMRYSB
