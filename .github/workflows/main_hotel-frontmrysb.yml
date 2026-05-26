@@ -1,65 +1,21 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - Hotel-frontMRYSB
+name: Deploy Frontend to Azure Web App
 
 on:
   push:
     branches:
       - main
-  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read #This is required for actions/checkout
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Node.js version
-        uses: actions/setup-node@v3
-        with:
-          node-version: '22.x'
-
-      - name: npm install, build, and test
-        run: |
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-
-      - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v4
-        with:
-          name: node-app
-          path: .
-
   deploy:
     runs-on: ubuntu-latest
-    needs: build
-    permissions:
-      id-token: write #This is required for requesting the JWT
-      contents: read #This is required for actions/checkout
 
     steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v4
-        with:
-          name: node-app
-      
-      - name: Login to Azure
-        uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_7D70C56F54E6425D995F332B4EDF34F2 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_377BC5B99A064193A6FDB0456D5497CB }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_C9E7BAD3C67B41A0A3CA9C9ADBF179AB }}
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
+      - name: Deploy frontend to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
-          app-name: 'Hotel-frontMRYSB'
-          slot-name: 'Production'
-          package: .
-          
+          app-name: Hotel-frontMRYSB
+          slot-name: Production
+          package: frontend
