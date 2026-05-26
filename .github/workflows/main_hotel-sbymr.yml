@@ -62,5 +62,5 @@ jobs:
         with:
           app-name: 'Hotel-SBYMR'
           slot-name: 'Production'
-          package: .
+          package: ./hotel-landing-page-nueva-rama/backend
           
