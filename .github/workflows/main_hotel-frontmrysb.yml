@@ -14,10 +14,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Deploy frontend only
+      - name: Zip frontend folder
+        run: zip -r frontend.zip frontend
+
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v3
         with:
           app-name: Hotel-frontMRYSB
-          slot-name: Production
-          package: frontend
-          
+          package: frontend.zip
